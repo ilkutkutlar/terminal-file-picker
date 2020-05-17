@@ -1,4 +1,5 @@
 require 'tty-table'
+require_relative 'helper'
 
 class DirectoryView
   def initialize(files = [], dir_path = '')
