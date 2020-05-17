@@ -65,12 +65,17 @@ class FilePicker
 
   def files_in_dir(dir_path)
     Dir.entries(dir_path).map do |f|
-      size_bytes = File.size("#{@current_path}/#{f}")
-      mtime = File.mtime("#{@current_path}/#{f}")
+      size_bytes = File.size(full_path(f))
+      mtime = File.mtime(full_path(f))
       date_mod = mtime.strftime("%d/%m/%Y")
       time_mod = mtime.strftime("%H:%M")
-      [f, size_bytes, date_mod, time_mod]
+      name = File.directory?(full_path(f)) ? "#{f}/" : f
+      [name, size_bytes, date_mod, time_mod]
     end
+  end
+
+  def full_path(file_name)
+    "#{@current_path}/#{file_name}"
   end
 
   def full_path_of_selected
