@@ -1,13 +1,12 @@
 require 'tty-cursor'
-require 'pry'
 require 'tty-reader'
 require_relative 'directory_view'
 require_relative 'helper.rb'
 
 class FilePicker
-  def initialize(dir_path)
+  def initialize(dir_path, options = {})
     @root_path = dir_path
-    @dir = DirectoryView.new
+    @dir = DirectoryView.new(options)
     @reader = TTY::Reader.new
     @reader.subscribe(self)
     @user_have_picked = false
@@ -59,10 +58,29 @@ class FilePicker
 
   private
 
+  def redraw
+    Helper.print_in_place(
+      @dir.render(@files, @current_path, @selected)
+    )
+  end
+
+  def files_in_dir(dir_path)
+    Dir.entries(dir_path).map do |f|
+      size_bytes = File.size(full_path(f))
+
+      mtime = File.mtime(full_path(f))
+      date_mod = mtime.strftime('%d/%m/%Y')
+      time_mod = mtime.strftime('%H:%M')
+
+      name = file_display_name(f)
+
+      [name, size_bytes, date_mod, time_mod]
+    end
+  end
+
   def change_directory(full_path)
     @current_path = full_path
     @files = order_files(files_in_dir(@current_path))
-    @dir.set_directory(@files, @current_path)
     @selected = 0
   end
 
@@ -78,20 +96,6 @@ class FilePicker
 
     # Sort so that "." comes before ".."
     (groups[:dots] || []).sort + groups[:files]
-  end
-
-  def files_in_dir(dir_path)
-    Dir.entries(dir_path).map do |f|
-      size_bytes = File.size(full_path(f))
-
-      mtime = File.mtime(full_path(f))
-      date_mod = mtime.strftime('%d/%m/%Y')
-      time_mod = mtime.strftime('%H:%M')
-
-      name = file_display_name(f)
-
-      [name, size_bytes, date_mod, time_mod]
-    end
   end
 
   def full_path(file_name)
@@ -110,9 +114,5 @@ class FilePicker
     end
 
     file_name
-  end
-
-  def redraw
-    print_in_place(@dir.render(@selected))
   end
 end
