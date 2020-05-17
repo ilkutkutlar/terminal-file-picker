@@ -3,7 +3,13 @@ require 'pastel'
 def print_in_place(text)
   line_count = text.count("\n")
   cursor = TTY::Cursor
-  print(text + cursor.column(1) + cursor.up(line_count))
+
+  in_place = cursor.column(1)
+  in_place << text
+  in_place << cursor.up(line_count)
+  in_place << cursor.column(1)
+
+  print(in_place)
 end
 
 def select(text)

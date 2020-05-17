@@ -1,16 +1,18 @@
 require 'tty-cursor'
+require 'pry'
 require 'tty-reader'
 require_relative 'directory_view'
 require_relative 'helper.rb'
 
 class FilePicker
-  def initialize(files, dir_path)
-    @files = files
-    @dir_path = dir_path
+  def initialize(dir_path)
+    @root_path = dir_path
+    @current_path = dir_path
+    @files = files_in_dir(@current_path)
 
     @reader = TTY::Reader.new
     @selected = 0
-    @dir = DirectoryView.new(@files, @dir_path)
+    @dir = DirectoryView.new(@files, @current_path)
     @reader.subscribe(self)
     @user_have_picked = false
   end
@@ -21,17 +23,17 @@ class FilePicker
     redraw
  
     until @user_have_picked
-      begin
+      # begin
         @reader.read_keypress
-      rescue Exception
-        print(TTY::Cursor.show)
-        exit 0
-      end
+      # rescue Exception
+        # print(TTY::Cursor.show)
+        # exit 0
+      # end
     end
 
-    print(TTY::Cursor.show)
     print(TTY::Cursor.clear_screen_down)
-    "#{@dir_path}/#{@files[@selected].first}"
+    print(TTY::Cursor.show)
+    full_path_of_selected
   end
 
   def keydown(event)
@@ -46,11 +48,34 @@ class FilePicker
 
   def keypress(event)
     if event.value == "\r"
-      @user_have_picked = true
+      if File.directory?(full_path_of_selected)
+        print(TTY::Cursor.clear_screen_down)
+        @current_path = full_path_of_selected
+        @files = files_in_dir(@current_path)
+        @dir.change_directory(@files, @current_path)
+        @selected = 0
+        redraw
+      else
+        @user_have_picked = true
+      end
     end
   end
 
   private
+
+  def files_in_dir(dir_path)
+    Dir.entries(dir_path).map do |f|
+      size_bytes = File.size("#{@current_path}/#{f}")
+      mtime = File.mtime("#{@current_path}/#{f}")
+      date_mod = mtime.strftime("%d/%m/%Y")
+      time_mod = mtime.strftime("%H:%M")
+      [f, size_bytes, date_mod, time_mod]
+    end
+  end
+
+  def full_path_of_selected
+    "#{@current_path}/#{@files[@selected].first}"
+  end
 
   def redraw
     print_in_place(@dir.render(@selected))

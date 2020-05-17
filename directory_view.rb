@@ -6,6 +6,11 @@ class DirectoryView
     @dir_path = dir_path
   end
 
+  def change_directory(files, dir_path)
+    @files = files
+    @dir_path = dir_path
+  end
+
   def render(selected_index)
     header = ["Name", "Size", "Date modified", "Time modified"]
     table = TTY::Table.new(header, @files)
