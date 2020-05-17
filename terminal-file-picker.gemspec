@@ -4,7 +4,7 @@ Gem::Specification.new do |spec|
   spec.authors = ["Ilkut Kutlar"]
   spec.email = ["ilkutkutlar@gmail.com"]
   spec.summary = %q{Interactive terminal file picker}
-  spec.description = %q{The gem brings up an interactive file browser that can be drawn on a terminal or terminal emulator that allows a user to browse their files and pick one. The picked file path is then returned to caller of the gem.}
+  spec.description = %q{This gem shows an interactive terminal file picker to user, allowing them to browse their files with arrow keys and file. The picked file path is then returned to the calling program.}
   spec.files = [
     "README.md",
     "lib/directory_view.rb",
