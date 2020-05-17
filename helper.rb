@@ -1,4 +1,5 @@
 require 'pastel'
+require 'tty-cursor'
 
 def print_in_place(text)
   line_count = text.count("\n")
