@@ -3,6 +3,7 @@ require 'tty-reader'
 require_relative 'directory_view'
 require_relative 'helper.rb'
 
+
 class FilePicker
   def initialize(dir_path, options = {})
     @root_path = dir_path

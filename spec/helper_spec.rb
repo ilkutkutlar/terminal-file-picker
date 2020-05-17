@@ -1,4 +1,4 @@
-require_relative '../helper'
+require_relative '../lib/helper'
 
 describe 'print_in_place' do
   it 'prints text and returns cursor to the start of the text' do

@@ -1,4 +1,4 @@
-require_relative '../directory_view'
+require_relative '../lib/directory_view'
 
 describe 'DirectoryView' do
   let(:dir) { DirectoryView.new }
