@@ -2,7 +2,7 @@ require 'tty-cursor'
 require 'tty-reader'
 require_relative 'directory_view'
 require_relative 'helper.rb'
-
+require 'benchmark'
 
 class FilePicker
   def initialize(dir_path, options = {})
@@ -61,7 +61,7 @@ class FilePicker
 
   def redraw
     Helper.print_in_place(
-      @dir.render(@files, @current_path, @selected)
+      @dir.render(@current_path, @files, @selected)
     )
   end
 

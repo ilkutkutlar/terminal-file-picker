@@ -16,8 +16,8 @@ describe 'DirectoryView' do
                  "17/05/2020     \e[0m\e[7m  19:39          \e[0m\n" \
                  '  File 2    2048    14/05/2020       19:00          '
 
-      expect(dir.render(files,
-                        'test_directory', 0)).to eq(expected)
+      expect(dir.render('test_directory', 
+                        files, 0)).to eq(expected)
     end
 
     it 'renders with custom header if user supplied it' do
@@ -31,8 +31,8 @@ describe 'DirectoryView' do
                  "17/05/2020  \e[0m\e[7m  19:39     \e[0m\n" \
                  '  File 2      2048        14/05/2020    19:00     '
 
-      expect(custom_header_dir.render(files,
-                                      'test_directory', 0)).to eq(expected)
+      expect(custom_header_dir.render('test_directory',
+                                      files, 0)).to eq(expected)
     end
 
     it 'renders with custom "Directory" label if user supplied it' do
@@ -45,8 +45,8 @@ describe 'DirectoryView' do
                  "17/05/2020     \e[0m\e[7m  19:39          \e[0m\n" \
                  '  File 2    2048    14/05/2020       19:00          '
 
-      expect(custom_dir_label_dir.render(files,
-                                         'test_directory', 0)).to eq(expected)
+      expect(custom_dir_label_dir.render('test_directory',
+                                         files, 0)).to eq(expected)
     end
 
     it 'renders with custom horizontal paddings if user supplied them' do
@@ -59,8 +59,8 @@ describe 'DirectoryView' do
                  "17/05/2020    \e[0m\e[7m 19:39         \e[0m\n" \
                  ' File 2  2048  14/05/2020     19:00         '
 
-      expect(custom_padding_dir.render(files,
-                                       'test_directory', 0)).to eq(expected)
+      expect(custom_padding_dir.render('test_directory',
+                                       files, 0)).to eq(expected)
     end
   end
 end

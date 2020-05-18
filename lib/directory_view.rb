@@ -10,7 +10,7 @@ class DirectoryView
     @right_pad = options.fetch(:right_pad, 2)
   end
 
-  def render(files, dir_path, selected_index)
+  def render(dir_path, files, selected_index)
     table = TTY::Table.new(@header, files)
 
     rendered = table.render do |r|
