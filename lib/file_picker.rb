@@ -121,7 +121,7 @@ class FilePicker
     end
 
     # Sort so that "." comes before ".."
-    (groups[:dots] || []).sort + groups[:files]
+    (groups[:dots] || []).sort + (groups[:files] || [])
   end
 
   def full_path(file_name)
