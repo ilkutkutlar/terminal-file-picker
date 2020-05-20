@@ -125,6 +125,7 @@ class FilePicker
   end
 
   def full_path(file_name)
+    return @current_path if file_name == "."
     return "#{@current_path}#{file_name}" if @current_path[-1] == '/'
 
     "#{@current_path}/#{file_name}"
