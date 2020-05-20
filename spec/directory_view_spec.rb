@@ -75,7 +75,33 @@ describe 'DirectoryView' do
 
       expect(custom_page_label_dir.render('test_directory',
                                          files, 0, 0)).to eq(expected)
-      
+    end
+
+    it 'hides info line if the user wants it hidden' do
+      hidden_info_dir = DirectoryView.new(show_info_line: false)
+
+      expected = "  Name      Size    Date modified    Time modified  \n" \
+                 "----------------------------------------------------\n" \
+                 "\e[7m  File 1  \e[0m\e[7m  4096  \e[0m\e[7m  " \
+                 "17/05/2020     \e[0m\e[7m  19:39          \e[0m\n" \
+                 '  File 2    2048    14/05/2020       19:00          '
+
+      expect(hidden_info_dir.render('test_directory',
+                                    files, 0, 0)).to eq(expected)
+    end
+
+    it 'renders info line below table if the user wants to' do
+      info_line_bottom_dir = DirectoryView.new(info_line_position: :bottom)
+
+      expected = "  Name      Size    Date modified    Time modified  \n" \
+                 "----------------------------------------------------\n" \
+                 "\e[7m  File 1  \e[0m\e[7m  4096  \e[0m\e[7m  " \
+                 "17/05/2020     \e[0m\e[7m  19:39          \e[0m\n" \
+                 "  File 2    2048    14/05/2020       19:00          \n\n" \
+                 "Page: 1/1 | Directory: test_directory"
+
+      expect(info_line_bottom_dir.render('test_directory',
+                                         files, 0, 0)).to eq(expected)
     end
 
     it 'paginates files and renders files in a specific page' do

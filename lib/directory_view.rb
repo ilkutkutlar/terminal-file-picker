@@ -12,23 +12,35 @@ class DirectoryView
     @right_pad = options.fetch(:right_pad, 2)
     @files_per_page = options.fetch(:files_per_page, 10)
     @page_label = options.fetch(:page_label, 'Page')
+    @show_info_line = options.fetch(:show_info_line, true)
+    @info_line_position = options.fetch(:info_line_position, :top)
   end
 
   def render(dir_path, files, selected_index, page)
     table = TTY::Table.new(@header, files)
 
-    rendered = table.render do |r|
+    table_rendered = table.render do |r|
       table_padding(r)
       table_border(r)
       table_selected_row(r, selected_index)
     end
 
-    info_line = info_bar(files.length, page, dir_path)
-    header = get_lines(rendered, 0..1)
-    body = get_lines(rendered, 2..)
+    header = get_lines(table_rendered, 0..1)
+    body = get_lines(table_rendered, 2..)
     page_body = paginate_table_body(body, page)
+    table_str = "#{header}\n#{page_body}"
 
-    "#{info_line}\n\n#{header}\n#{page_body}"
+    if @show_info_line
+      info_line = info_bar(files.length, page, dir_path)
+
+      if @info_line_position == :top
+        "#{info_line}\n\n#{table_str}"
+      else
+        "#{table_str}\n\n#{info_line}"
+      end
+    else
+      table_str
+    end
   end
 
   private
