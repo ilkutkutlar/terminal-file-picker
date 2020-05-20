@@ -11,6 +11,7 @@ class FilePicker
     @reader = TTY::Reader.new
     @reader.subscribe(self)
     @user_have_picked = false
+    @page = 0
 
     change_directory(dir_path)
   end
@@ -35,12 +36,20 @@ class FilePicker
   end
 
   def keydown(_event)
-    @selected += 1 if @selected < @files.length - 1
+    @selected += 1 unless selected_at_bottom?
+    if selected_below_page?
+      @page += 1
+      print(TTY::Cursor.clear_screen_down)
+    end
     redraw
   end
 
   def keyup(_event)
-    @selected -= 1 if @selected.positive?
+    @selected -= 1 unless selected_at_top?
+    if selected_above_page?
+      @page -= 1
+      print(TTY::Cursor.clear_screen_down)
+    end
     redraw
   end
 
@@ -61,8 +70,24 @@ class FilePicker
 
   def redraw
     Helper.print_in_place(
-      @dir.render(@current_path, @files, @selected)
+      @dir.render(@current_path, @files, @selected, @page)
     )
+  end
+
+  def selected_at_top?
+    @selected.zero?
+  end
+
+  def selected_at_bottom?
+    @selected == @files.length - 1
+  end
+
+  def selected_above_page?
+    @selected < (@page * @dir.files_per_page)
+  end
+
+  def selected_below_page?
+    @selected > (@page * @dir.files_per_page) + @dir.files_per_page - 1
   end
 
   def files_in_dir(dir_path)
