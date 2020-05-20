@@ -13,6 +13,9 @@ class FilePicker
     @user_have_picked = false
     @page = 0
 
+    @date_format = options.fetch(:date_format, '%d/%m/%Y')
+    @time_format = options.fetch(:time_format, '%H:%M')
+
     change_directory(dir_path)
   end
 
@@ -95,8 +98,8 @@ class FilePicker
       size_bytes = File.size(full_path(f))
 
       mtime = File.mtime(full_path(f))
-      date_mod = mtime.strftime('%d/%m/%Y')
-      time_mod = mtime.strftime('%H:%M')
+      date_mod = mtime.strftime(@date_format)
+      time_mod = mtime.strftime(@time_format)
 
       name = file_display_name(f)
 
