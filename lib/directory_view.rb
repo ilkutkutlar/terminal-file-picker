@@ -46,14 +46,14 @@ class DirectoryView
   private
 
   def info_bar(total_files, page, dir_path)
-    page_count = (total_files.to_f/@files_per_page).ceil
+    page_count = (total_files.to_f / @files_per_page).ceil
     "#{@page_label}: #{page + 1}/#{page_count} | #{@dir_label}: #{dir_path}"
   end
 
   def paginate_table_body(body, page_no)
     page_start = page_no * @files_per_page
     page_end = page_start + (@files_per_page - 1)
-    
+
     get_lines(body, page_start..page_end)
   end
 

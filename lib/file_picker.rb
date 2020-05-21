@@ -9,10 +9,11 @@ class FilePicker
   def initialize(dir_path, options = {})
     @root_path = dir_path
     @dir = DirectoryView.new(options)
-    @reader = TTY::Reader.new
+    @reader = TTY::Reader.new(interrupt: :exit)
     @reader.subscribe(self)
     @user_have_picked = false
     @page = 0
+    @cursor = TTY::Cursor
 
     @date_format = options.fetch(:date_format, '%d/%m/%Y')
     @time_format = options.fetch(:time_format, '%H:%M')
@@ -21,20 +22,13 @@ class FilePicker
 
   def pick_file
     @user_have_picked = false
-    print(TTY::Cursor.hide)
     redraw
 
-    until @user_have_picked
-      begin
-        @reader.read_keypress
-      rescue Exception
-        print(TTY::Cursor.show)
-        exit 0
-      end
+    @cursor.invisible do
+      @reader.read_keypress until @user_have_picked
     end
 
-    print(TTY::Cursor.clear_screen_down)
-    print(TTY::Cursor.show)
+    print(@cursor.clear_screen_down)
     full_path_of_selected
   end
 
@@ -42,7 +36,7 @@ class FilePicker
     @selected += 1 unless selected_at_bottom?
     if selected_below_page?
       @page += 1
-      print(TTY::Cursor.clear_screen_down)
+      print(@cursor.clear_screen_down)
     end
     redraw
   end
@@ -51,7 +45,7 @@ class FilePicker
     @selected -= 1 unless selected_at_top?
     if selected_above_page?
       @page -= 1
-      print(TTY::Cursor.clear_screen_down)
+      print(@cursor.clear_screen_down)
     end
     redraw
   end
@@ -61,7 +55,7 @@ class FilePicker
     when "\r"
       if File.directory?(full_path_of_selected)
         change_directory(full_path_of_selected)
-        print(TTY::Cursor.clear_screen_down)
+        print(@cursor.clear_screen_down)
         redraw
       else
         @user_have_picked = true
@@ -127,7 +121,7 @@ class FilePicker
   end
 
   def full_path(file_name)
-    return @current_path if file_name == "."
+    return @current_path if file_name == '.'
     return "#{@current_path}#{file_name}" if @current_path[-1] == '/'
 
     "#{@current_path}/#{file_name}"

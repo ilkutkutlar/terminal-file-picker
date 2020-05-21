@@ -1,6 +1,6 @@
 require_relative '../lib/directory_view'
 
-describe 'DirectoryView' do
+describe DirectoryView do
   let(:dir) { DirectoryView.new }
   let(:files) do
     [['File 1', '4096', '17/05/2020', '19:39'],
