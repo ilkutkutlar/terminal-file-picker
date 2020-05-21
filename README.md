@@ -86,3 +86,9 @@ You can also change the position of the info line (valid values are :top or :bot
 ```rb
 FilePicker.new('.', info_line_position: :bottom)
 ```
+
+You can change the date and time format of date modified and time modified columns. The format can be specified using the same format accepted by the built-in `strftime` function.
+
+```rb
+FilePicker.new('.',  date_format: '%d-%m-%Y', time_format: '%H.%m')
+``
