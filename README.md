@@ -6,9 +6,7 @@ The gem is useful when your program needs to accept a file path as input and you
 
 The gem does not rely on the Curses library and instead uses the [TTY toolkit](https://github.com/piotrmurach/tty), which has cross platform support and support for many types of terminals/terminal emulators. Therefore this gem should also have the same level of support.
 
-# Usage
-
-Simple usage:
+# Simple Usage
 
 ```rb
 # Only required argument is the "root path". The user starts
@@ -44,38 +42,47 @@ Page: 1/2 | Directory: .
   spec/                           4096    21-05-2020       00:47
 ```
 
-There are some options to customise the look and feel of the file picker (all options do have default values, so all are optional):
+# Options
+
+There are some options to customise the look and feel of the file picker (all options do have default values, so all are optional)
+
+The table headers can be changed (e.g. for internationalisation of if you want shorter headers).
+```rb
+FilePicker.new('.', header: ["Nm.", "Sz.", "Date md.", "Time md."])
+```
+
+You can change the current directory label which by default says "Directory" in the info line.
 
 ```rb
-# The table headers can be changed (e.g. if you want shorter headers
-# or for internationalisation).
-FilePicker.new('.', 
-               header: ["Nm.", "Sz.", "Date md.", "Time md."])
-
-
-# You can changes the label which by default says "Directory" in the info line.
 FilePicker.new('.', dir_label: 'Dir')
+```
 
+You can change current page label which by default says "Page" in the info line.
 
-# You can change the label which by default says "Page" in the info line.
+```
 FilePicker.new('.', page_label: 'Pg')
+```
 
+You can change paddings of the table (in terms of number of spaces)
 
-# You can change paddings of the table (in terms of number of spaces)
+```rb
 FilePicker.new('.', left_pad: 1, right_pad: 1)
+```
 
+The file picker automatically paginates files. You can set how many files there should be in each page (10 by default)
 
-# The file picker automatically paginates files. You can set how
-# many files there should be in each page (10 by default)
+```rb
 FilePicker.new('.', files_per_page: 20)
+```
 
+You can choose to hide the info line (the line which shows the current directory and current page)
 
-# You can choose to hide the info line (the line which shows the current
-# directory and current page)
+```rb
 FilePicker.new('.', show_info_line: false)
+```
 
+You can also change the position of the info line (valid values are :top or :bottom. :top is the default)
 
-# You can also change the position of the info line (valid values are
-# :top or :bottom. :top is the default)
+```rb
 FilePicker.new('.', info_line_position: :bottom)
 ```
