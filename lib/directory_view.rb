@@ -8,10 +8,10 @@ class DirectoryView
     @header = options.fetch(:header,
                             ['Name', 'Size', 'Date modified', 'Time modified'])
     @dir_label = options.fetch(:dir_label, 'Directory')
+    @page_label = options.fetch(:page_label, 'Page')
     @left_pad = options.fetch(:left_pad, 2)
     @right_pad = options.fetch(:right_pad, 2)
     @files_per_page = options.fetch(:files_per_page, 10)
-    @page_label = options.fetch(:page_label, 'Page')
     @show_info_line = options.fetch(:show_info_line, true)
     @info_line_position = options.fetch(:info_line_position, :top)
   end
