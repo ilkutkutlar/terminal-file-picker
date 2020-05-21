@@ -59,7 +59,7 @@ FilePicker.new('.', dir_label: 'Dir')
 
 You can change current page label which by default says "Page" in the info line.
 
-```
+```rb
 FilePicker.new('.', page_label: 'Pg')
 ```
 
