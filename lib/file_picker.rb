@@ -3,6 +3,7 @@ require 'tty-reader'
 require_relative 'directory_view'
 require_relative 'helper.rb'
 require 'benchmark'
+require 'pry'
 
 class FilePicker
   def initialize(dir_path, options = {})
@@ -15,7 +16,6 @@ class FilePicker
 
     @date_format = options.fetch(:date_format, '%d/%m/%Y')
     @time_format = options.fetch(:time_format, '%H:%M')
-
     change_directory(dir_path)
   end
 
@@ -72,9 +72,7 @@ class FilePicker
   private
 
   def redraw
-    Helper.print_in_place(
-      @dir.render(@current_path, @files, @selected, @page)
-    )
+    Helper.print_in_place(@dir.render(@current_path, @files, @selected, @page))
   end
 
   def selected_at_top?
@@ -108,9 +106,10 @@ class FilePicker
   end
 
   def change_directory(full_path)
+    @page = 0
+    @selected = 0
     @current_path = full_path
     @files = order_files(files_in_dir(@current_path))
-    @selected = 0
   end
 
   def order_files(files)
