@@ -91,4 +91,4 @@ You can change the date and time format of date modified and time modified colum
 
 ```rb
 FilePicker.new('.',  date_format: '%d-%m-%Y', time_format: '%H.%m')
-``
+```
