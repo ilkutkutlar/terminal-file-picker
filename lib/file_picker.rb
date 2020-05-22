@@ -1,9 +1,7 @@
 require 'tty-cursor'
 require 'tty-reader'
 require_relative 'directory_view'
-require_relative 'helper.rb'
-require 'benchmark'
-require 'pry'
+require_relative 'helper'
 
 class FilePicker
   def initialize(dir_path, options = {})

@@ -1,4 +1,5 @@
 require 'tty-table'
+require 'tty-screen'
 require_relative 'helper'
 
 class DirectoryView
@@ -14,12 +15,15 @@ class DirectoryView
     @files_per_page = options.fetch(:files_per_page, 10)
     @show_info_line = options.fetch(:show_info_line, true)
     @info_line_position = options.fetch(:info_line_position, :top)
+    @screen_width = TTY::Screen.width
   end
 
   def render(dir_path, files, selected_index, page)
     table = TTY::Table.new(@header, files)
-
-    table_rendered = table.render do |r|
+    
+    table_rendered = table.render(:basic) do |r|
+      r.width = @screen_width
+      r.resize = table_width_overflowed?(table.width)
       table_padding(r)
       table_border(r)
       table_selected_row(r, selected_index)
@@ -44,6 +48,13 @@ class DirectoryView
   end
 
   private
+
+  def table_width_overflowed?(table_content_width)
+    table_padding = @header.length * (@left_pad + @right_pad) + 1
+    full_table_length = table_content_width + table_padding
+    
+    full_table_length >= @screen_width
+  end
 
   def info_bar(total_files, page, dir_path)
     page_count = (total_files.to_f / @files_per_page).ceil
