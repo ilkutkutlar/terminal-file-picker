@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
 
   spec.files = [
     'README.md',
-    'lib/file_picker.rb',
+    'lib/terminal-file-picker.rb',
     'lib/file_browser_view.rb',
     'lib/helper.rb'
   ]
