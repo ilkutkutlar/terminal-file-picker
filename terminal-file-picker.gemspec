@@ -8,6 +8,7 @@ Gem::Specification.new do |spec|
                      'user, allowing them to browse their files with arrow'  \
                      'keys. The picked file path is then returned to the'    \
                      'calling program.'
+  spec.homepage = 'https://github.com/ilkutkutlar/terminal-file-picker'
   spec.files = [
     'README.md',
     'lib/file_picker.rb',
@@ -15,4 +16,5 @@ Gem::Specification.new do |spec|
     'lib/helper.rb'
   ]
   spec.require_paths = ['lib']
+  spec.add_development_dependency "rspec"
 end

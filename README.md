@@ -28,18 +28,18 @@ The simple file picker looks like this:
 ```
 Page: 1/2 | Directory: .
 
-  Name                            Size    Date modified    Time modified
-  --------------------------------------------------------------------------
-  .                               4096    21-05-2020       00:53
-  ..                              4096    18-05-2020       22:45
-  terminal-file-picker.rb         113     21-05-2020       00:19
-  .gitignore                      20      17-05-2020       01:04
-  LICENSE                         1068    17-05-2020       22:42
-  README.md                       916     21-05-2020       00:53
-  .rubocop.yml                    497     17-05-2020       19:15
-  terminal-file-picker.gemspec    581     17-05-2020       22:24
-  .git/                           4096    21-05-2020       00:51
-  spec/                           4096    21-05-2020       00:47
+  Name                            Size (B)    Date modified    Time modified
+  ----------------------------------------------------------------------------
+  .                               4096        21/05/2020       00:53
+  ..                              4096        18/05/2020       22:45
+  terminal-file-picker.rb         113         21/05/2020       00:19
+  .gitignore                      20          17/05/2020       01:04
+  LICENSE                         1068        17/05/2020       22:42
+  README.md                       916         21/05/2020       00:53
+  .rubocop.yml                    497         17/05/2020       19:15
+  terminal-file-picker.gemspec    581         17/05/2020       22:24
+  .git/                           4096        21/05/2020       00:51
+  spec/                           4096        21/05/2020       00:47
 ```
 
 # Options

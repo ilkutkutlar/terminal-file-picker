@@ -10,7 +10,7 @@ class FileBrowserView
 
   def initialize(options = {})
     @header = options.fetch(:header,
-                            ['Name', 'Size', 'Date modified', 'Time modified'])
+                            ['Name', 'Size (B)', 'Date modified', 'Time modified'])
     @dir_label = options.fetch(:dir_label, 'Directory')
     @page_label = options.fetch(:page_label, 'Page')
     @left_pad = options.fetch(:left_pad, 2)
