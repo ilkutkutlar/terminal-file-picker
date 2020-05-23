@@ -6,6 +6,18 @@ The gem is useful when your program needs to accept a file path as input and you
 
 The gem does not rely on the Curses library and instead uses the [TTY toolkit](https://github.com/piotrmurach/tty), which has cross platform support and support for many types of terminals/terminal emulators. Therefore this gem should also have the same level of support.
 
+# Installation
+
+```rb
+gem install 'terminal-file-picker'
+```
+
+or add it to your project's `Gemfile`:
+
+```rb
+gem 'terminal-file-picker'
+```
+
 # Simple Usage
 
 ```rb
