@@ -1,12 +1,16 @@
 require 'tty-cursor'
 require 'tty-reader'
-require_relative 'directory_view'
+require_relative 'file_browser_view'
 require_relative 'helper'
+require 'benchmark'
 
+# Responsible for keeping the state of the interactive file picker.
+# Also responds to user input to modify the state and redraw
+# file picker to reflect new state.
 class FilePicker
   def initialize(dir_path, options = {})
     @root_path = dir_path
-    @dir = DirectoryView.new(options)
+    @dir = FileBrowserView.new(options)
     @reader = TTY::Reader.new(interrupt: :exit)
     @reader.subscribe(self)
     @user_have_picked = false
@@ -20,7 +24,7 @@ class FilePicker
 
   def pick_file
     @user_have_picked = false
-    redraw
+    redraw(false)
 
     @cursor.invisible do
       @reader.read_keypress until @user_have_picked
@@ -36,7 +40,7 @@ class FilePicker
       @page += 1
       print(@cursor.clear_screen_down)
     end
-    redraw
+    redraw(true)
   end
 
   def keyup(_event)
@@ -45,7 +49,7 @@ class FilePicker
       @page -= 1
       print(@cursor.clear_screen_down)
     end
-    redraw
+    redraw(true)
   end
 
   def keypress(event)
@@ -54,7 +58,10 @@ class FilePicker
       if File.directory?(full_path_of_selected)
         change_directory(full_path_of_selected)
         print(@cursor.clear_screen_down)
-        redraw
+        # Cache keeps a rendering of current directory.
+        # Going to a new directory, so needs to refresh
+        # the cache.
+        redraw(false)
       else
         @user_have_picked = true
       end
@@ -63,8 +70,9 @@ class FilePicker
 
   private
 
-  def redraw
-    Helper.print_in_place(@dir.render(@current_path, @files, @selected, @page))
+  def redraw(use_cache)
+    rendered = @dir.render(@current_path, @files, @selected, @page, use_cache)
+    Helper.print_in_place(rendered)
   end
 
   def selected_at_top?

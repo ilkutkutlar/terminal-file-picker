@@ -1,6 +1,7 @@
 require 'pastel'
 require 'tty-cursor'
 
+# Misc. helper methods which accomplish some common tasks.
 module Helper
   class << self
     def print_in_place(text)
