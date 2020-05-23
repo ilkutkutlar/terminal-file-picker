@@ -2,7 +2,6 @@ require 'tty-cursor'
 require 'tty-reader'
 require_relative 'file_browser_view'
 require_relative 'helper'
-require 'benchmark'
 
 # Responsible for keeping the state of the interactive file picker.
 # Also responds to user input to modify the state and redraw
