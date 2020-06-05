@@ -7,15 +7,14 @@ Gem::Specification.new do |spec|
   spec.description = 'This gem shows an interactive terminal file picker to user, allowing them to browse their files with arrow keys. The picked file path is then returned to the calling program.'
   spec.homepage = 'https://github.com/ilkutkutlar/terminal-file-picker'
   spec.license = 'MIT'
-
   spec.files = [
     'README.md',
     'lib/terminal-file-picker.rb',
-    'lib/file_browser_view.rb',
-    'lib/helper.rb'
+    'lib/terminal-file-picker/file_picker.rb',
+    'lib/terminal-file-picker/file_browser_view.rb',
+    'lib/terminal-file-picker/helper.rb'
   ]
   spec.require_paths = ['lib']
-  
   spec.add_dependency 'pastel', '~> 0.7.4'
   spec.add_dependency 'tty-cursor', '~> 0.7.1'
   spec.add_dependency 'tty-reader', '~> 0.7.0'

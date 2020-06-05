@@ -1,4 +1,4 @@
-require_relative '../lib/file_browser_view'
+require_relative '../lib/terminal-file-picker/file_browser_view'
 
 describe FileBrowserView do
   let(:dir) { FileBrowserView.new }
@@ -92,11 +92,11 @@ describe FileBrowserView do
     it 'renders info line below table if the user wants to' do
       info_line_bottom_dir = FileBrowserView.new(info_line_position: :bottom)
 
-      expected = "  Name      Size (B)    Date modified    Time modified  \n" \
-                 "--------------------------------------------------------\n" \
+      expected = "  Name      Size (B)    Date modified    Time modified  \n"\
+                 "--------------------------------------------------------\n"\
                  "\e[7m  File 1    4096        " \
                  "17/05/2020       19:39          \e[0m\n" \
-                 "  File 2    2048        14/05/2020       19:00          \n\n" \
+                 "  File 2    2048        14/05/2020       19:00          \n\n"\
                  'Page: 1/1 | Directory: test_directory'
 
       expect(info_line_bottom_dir.render('test_directory',
