@@ -1,4 +1,4 @@
-require_relative '../lib/terminal-file-picker/helper'
+require_relative '../../lib/terminal-file-picker/helper'
 
 describe Helper do
   describe 'print_in_place' do

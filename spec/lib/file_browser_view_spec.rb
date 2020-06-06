@@ -1,4 +1,4 @@
-require_relative '../lib/terminal-file-picker/file_browser_view'
+require_relative '../../lib/terminal-file-picker/file_browser_view'
 
 describe FileBrowserView do
   let(:dir) { FileBrowserView.new }
