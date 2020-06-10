@@ -1,6 +1,6 @@
-require 'tty-table'
 require 'tty-screen'
 require_relative 'helper'
+require_relative 'table'
 
 # Renders a directory view with pagination support. Allows
 # highlighting an item in the directory to indicate its selected.
@@ -55,14 +55,8 @@ class FileBrowserView
   end
 
   def render_files_table(files)
-    table = TTY::Table.new(@header, files)
-
-    table.render(:basic) do |r|
-      r.width = @screen_width
-      r.resize = table_width_overflowed?(table.width)
-      table_padding(r)
-      table_border(r)
-    end
+    @table = Table.new(@header, files, @left_pad, @right_pad)
+    @table.render
   end
 
   def highlight_row(rows, row_no)
@@ -84,20 +78,6 @@ class FileBrowserView
   end
 
   def table_width_overflowed?(table_content_width)
-    table_padding = @header.length * (@left_pad + @right_pad) + 1
-    full_table_length = table_content_width + table_padding
-
-    full_table_length >= @screen_width
-  end
-
-  def table_padding(renderer)
-    renderer.padding = [0, @right_pad, 0, @left_pad]
-  end
-
-  def table_border(renderer)
-    renderer.border do
-      center ''
-      mid '-'
-    end
+    @table.total_row_size >= @screen_width
   end
 end

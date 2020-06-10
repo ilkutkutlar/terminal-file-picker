@@ -22,7 +22,6 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'tty-cursor', '~> 0.7.1'
   spec.add_dependency 'tty-reader', '~> 0.7.0'
   spec.add_dependency 'tty-screen', '~>0.7.1'
-  spec.add_dependency 'tty-table', '~> 0.11.0'
 
   spec.add_development_dependency 'rspec', '~> 3.9'
   spec.add_development_dependency 'rubocop', '~> 0.82.0'
