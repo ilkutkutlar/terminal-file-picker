@@ -1,5 +1,6 @@
 require_relative '../../lib/terminal-file-picker/table'
 
+# rubocop:disable Metrics/BlockLength
 describe Table do
   let(:header) { ['Column 1', 'Column 2', 'Column 3'] }
   let(:data) do
@@ -31,3 +32,4 @@ describe Table do
     end
   end
 end
+# rubocop:enable Metrics/BlockLength

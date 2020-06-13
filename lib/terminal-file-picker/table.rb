@@ -1,15 +1,17 @@
+# Styles given data to make it suitable for printing on a screen and
+# look like justified columns of a table.
 class Table
   def initialize(header, data, left_pad, right_pad)
     @header = header
     @data = data
     @left_pad = left_pad
-    @right_pad = right_pad   
+    @right_pad = right_pad
     @col_sizes = table_column_sizes
   end
 
   def render
     rendered_header = render_row(@header)
-    rendered_data = @data.map {|row| render_row(row)}.join("\n")
+    rendered_data = @data.map { |row| render_row(row) }.join("\n")
     border = '-' * total_row_size
     [rendered_header, border, rendered_data].join("\n")
   end

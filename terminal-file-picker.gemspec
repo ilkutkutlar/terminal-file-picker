@@ -15,7 +15,7 @@ Gem::Specification.new do |spec|
     'lib/terminal-file-picker/helper.rb'
   ]
   spec.require_paths = ['lib']
-  
+
   spec.required_ruby_version = '>= 2.0.0'
 
   spec.add_dependency 'pastel', '~> 0.7.4'

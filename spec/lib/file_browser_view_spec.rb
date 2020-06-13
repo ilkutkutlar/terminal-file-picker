@@ -1,5 +1,6 @@
 require_relative '../../lib/terminal-file-picker/file_browser_view'
 
+# rubocop:disable Metrics/BlockLength
 describe FileBrowserView do
   let(:files) do
     [['File 1', '4096', '17/05/2020', '19:39'],
@@ -112,7 +113,6 @@ describe FileBrowserView do
       dir = FileBrowserView.new
       allow(dir).to receive(:screen_width).and_return(30)
 
-
       expected = "Page: 1/1 | Directory: test_di\n\n" \
                  "  Name      Size (B)    Date m\n" \
                  "------------------------------\n" \
@@ -123,3 +123,4 @@ describe FileBrowserView do
     end
   end
 end
+# rubocop:enable Metrics/BlockLength
