@@ -9,8 +9,8 @@ class FileBrowserView
   attr_reader :files_per_page
 
   def initialize(options = {})
-    @header = options.fetch(:header,
-                            ['Name', 'Size (B)', 'Date modified', 'Time modified'])
+    default_header = ['Name', 'Size (B)', 'Date modified', 'Time modified']
+    @header = options.fetch(:header, default_header)
     @dir_label = options.fetch(:dir_label, 'Directory')
     @page_label = options.fetch(:page_label, 'Page')
     @left_pad = options.fetch(:left_pad, 2)
@@ -18,17 +18,11 @@ class FileBrowserView
     @files_per_page = options.fetch(:files_per_page, 10)
     @show_info_line = options.fetch(:show_info_line, true)
     @info_line_position = options.fetch(:info_line_position, :top)
-    @screen_width = TTY::Screen.width
-
     @cache = ''
   end
 
   def render(dir_path, files, selected_index, page, use_cache = false)
-    if !use_cache || (use_cache && @cache.empty?)
-      @cache = render_files_table(files)
-    end
-
-    files_table = @cache
+    files_table = files_table_string(files, use_cache)
     file_browser = render_file_browser(files_table, selected_index, page)
 
     return file_browser unless @show_info_line
@@ -54,9 +48,15 @@ class FileBrowserView
     "#{header}\n#{body}"
   end
 
-  def render_files_table(files)
+  def files_table_string(files, use_cache)
     @table = Table.new(@header, files, @left_pad, @right_pad)
-    @table.render
+
+    @cache = @table.render if !use_cache || (use_cache && @cache.empty?)
+    return @cache unless table_width_overflowed?
+
+    @cache.split("\n").map do |line|
+      line[0..(screen_width - 1)]
+    end.join("\n")
   end
 
   def highlight_row(rows, row_no)
@@ -67,7 +67,12 @@ class FileBrowserView
 
   def info_bar(total_files, page, dir_path)
     page_count = (total_files.to_f / @files_per_page).ceil
-    "#{@page_label}: #{page + 1}/#{page_count} | #{@dir_label}: #{dir_path}"
+    page_info = "#{@page_label}: #{page + 1}/#{page_count}"
+    dir_info = "#{@dir_label}: #{dir_path}"
+    info_bar = "#{page_info} | #{dir_info}"
+    return info_bar unless info_bar.length > screen_width
+
+    info_bar[0..screen_width - 1]
   end
 
   def paginate_table_body(body_rows, page_no)
@@ -77,7 +82,11 @@ class FileBrowserView
     body_rows[page_start..page_end]
   end
 
-  def table_width_overflowed?(table_content_width)
-    @table.total_row_size >= @screen_width
+  def table_width_overflowed?
+    @table.total_row_size >= screen_width
+  end
+
+  def screen_width
+    TTY::Screen.width
   end
 end
