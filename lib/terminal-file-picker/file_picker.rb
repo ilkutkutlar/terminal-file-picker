@@ -30,7 +30,7 @@ class FilePicker
     end
 
     print(@cursor.clear_screen_down)
-    full_path_of_selected
+    file_path_of_selected
   end
 
   def keydown(_event)
@@ -54,8 +54,8 @@ class FilePicker
   def keypress(event)
     case event.value
     when "\r"
-      if File.directory?(full_path_of_selected)
-        change_directory(full_path_of_selected)
+      if File.directory?(file_path_of_selected)
+        change_directory(file_path_of_selected)
         print(@cursor.clear_screen_down)
         # Cache keeps a rendering of current directory.
         # Going to a new directory, so needs to refresh
@@ -92,29 +92,31 @@ class FilePicker
 
   def files_in_dir(dir_path)
     Dir.entries(dir_path).map do |f|
-      size_bytes = File.size(full_path(f))
+      size_bytes = File.size(file_path(f))
 
-      mtime = File.mtime(full_path(f))
+      mtime = File.mtime(file_path(f))
       date_mod = mtime.strftime(@date_format)
       time_mod = mtime.strftime(@time_format)
 
-      name = file_display_name(f)
+      name = add_indicator(f)
 
       [name, size_bytes, date_mod, time_mod]
     end
   end
 
-  def change_directory(full_path)
+  def change_directory(file_path)
     @page = 0
     @selected = 0
-    @current_path = full_path
+    @current_path = file_path
     @files = order_files(files_in_dir(@current_path))
   end
 
+  # Order files such that '.' and '..' come before
+  # all the other files.
   def order_files(files)
     # Put "." and ".." at the start
     groups = files.group_by do |f|
-      if f.first == '.' || f.first == '..'
+      if f.first == './' || f.first == '../'
         :dots
       else
         :files
@@ -122,25 +124,23 @@ class FilePicker
     end
 
     # Sort so that "." comes before ".."
-    (groups[:dots] || []).sort + (groups[:files] || [])
+    (groups[:dots] || []).sort.reverse + (groups[:files] || [])
   end
 
-  def full_path(file_name)
+  def add_indicator(file_name)
+    file_path = file_path(file_name)
+    return file_name unless File.directory?(file_path)
+
+    "#{file_name}/"
+  end
+
+  def file_path(file_name)
     return @current_path if file_name == '.'
-    return "#{@current_path}#{file_name}" if @current_path[-1] == '/'
 
-    "#{@current_path}/#{file_name}"
+    File.join(@current_path, file_name)
   end
 
-  def full_path_of_selected
-    full_path(@files[@selected].first)
-  end
-
-  def file_display_name(file_name)
-    if File.directory?(full_path(file_name))
-      return "#{file_name}/" unless ['.', '..'].include?(file_name)
-    end
-
-    file_name
+  def file_path_of_selected
+    file_path(@files[@selected].first)
   end
 end
