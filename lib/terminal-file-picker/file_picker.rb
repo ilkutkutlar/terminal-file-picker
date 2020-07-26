@@ -2,6 +2,7 @@ require 'tty-cursor'
 require 'tty-reader'
 require_relative 'file_browser_view'
 require_relative 'helper'
+require_relative 'dir_info'
 
 # Responsible for keeping the state of the interactive file picker.
 # Also responds to user input to modify the state and redraw
@@ -15,9 +16,8 @@ class FilePicker
     @user_have_picked = false
     @page = 0
     @cursor = TTY::Cursor
+    @options = options
 
-    @date_format = options.fetch(:date_format, '%d/%m/%Y')
-    @time_format = options.fetch(:time_format, '%H:%M')
     change_directory(dir_path)
   end
 
@@ -90,25 +90,11 @@ class FilePicker
     @selected > (@page * @dir.files_per_page) + @dir.files_per_page - 1
   end
 
-  def files_in_dir(dir_path)
-    Dir.entries(dir_path).map do |f|
-      size_bytes = File.size(file_path(f))
-
-      mtime = File.mtime(file_path(f))
-      date_mod = mtime.strftime(@date_format)
-      time_mod = mtime.strftime(@time_format)
-
-      name = add_indicator(f)
-
-      [name, size_bytes, date_mod, time_mod]
-    end
-  end
-
   def change_directory(file_path)
     @page = 0
     @selected = 0
     @current_path = file_path
-    @files = order_files(files_in_dir(@current_path))
+    @files = order_files(DirInfo.files_in_dir(@current_path, @options))
   end
 
   # Order files such that '.' and '..' come before
@@ -125,13 +111,6 @@ class FilePicker
 
     # Sort so that "." comes before ".."
     (groups[:dots] || []).sort.reverse + (groups[:files] || [])
-  end
-
-  def add_indicator(file_name)
-    file_path = file_path(file_name)
-    return file_name unless File.directory?(file_path)
-
-    "#{file_name}/"
   end
 
   def file_path(file_name)

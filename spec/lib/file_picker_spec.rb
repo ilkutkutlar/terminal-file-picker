@@ -12,7 +12,7 @@ describe FilePicker do
 
   before do
     subject.instance_variable_set(:@files, files)
-    allow(subject).to receive(:files_in_dir).and_return(files)
+    allow(DirInfo).to receive(:files_in_dir).and_return(files)
   end
 
   describe '#pick_file' do
