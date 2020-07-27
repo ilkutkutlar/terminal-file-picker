@@ -8,18 +8,15 @@ require_relative 'file_browser_model'
 # Also responds to user input to modify the state and redraw
 # file picker to reflect new state.
 class FilePicker
-  def initialize(dir_path, options = {})
-    @root_path = dir_path
-    @dir = FileBrowserView.new(options)
+  def initialize(start_dir_path, options = {})
+    @model = FileBrowserModel.new(start_dir_path, options)
+    @view = FileBrowserView.new(options)
     @reader = TTY::Reader.new(interrupt: :exit)
     @reader.subscribe(self)
-    @user_have_picked = false
-    @page = 0
     @cursor = TTY::Cursor
-    @options = options
-    @model = FileBrowserModel.new
+    @user_have_picked = false
 
-    change_directory(dir_path)
+    change_directory(start_dir_path)
   end
 
   def pick_file
@@ -35,18 +32,18 @@ class FilePicker
   end
 
   def keydown(_event)
-    @selected += 1 unless selected_at_bottom?
+    @model.selected += 1 unless selected_at_bottom?
     if selected_below_page?
-      @page += 1
+      @model.page += 1
       print(@cursor.clear_screen_down)
     end
     redraw(true)
   end
 
   def keyup(_event)
-    @selected -= 1 unless selected_at_top?
+    @model.selected -= 1 unless selected_at_top?
     if selected_above_page?
-      @page -= 1
+      @model.page -= 1
       print(@cursor.clear_screen_down)
     end
     redraw(true)
@@ -70,57 +67,39 @@ class FilePicker
 
   private
 
+  def change_directory(file_path)
+    @model.current_path = file_path
+    @model.page = 0
+    @model.selected = 0
+    @model.files = @model.order_files(@model.files_in_dir)
+  end
+
   def redraw(use_cache)
-    rendered = @dir.render(@current_path, @files, @selected, @page, use_cache)
+    rendered = @view.render(@model.current_path,
+                            @model.files,
+                            @model.selected,
+                            @model.page,
+                            use_cache)
     Helper.print_in_place(rendered)
   end
 
   def selected_at_top?
-    @selected.zero?
+    @model.selected.zero?
   end
 
   def selected_at_bottom?
-    @selected == @files.length - 1
+    @model.selected == @model.files.length - 1
   end
 
   def selected_above_page?
-    @selected < (@page * @dir.files_per_page)
+    @model.selected < (@model.page * @view.files_per_page)
   end
 
   def selected_below_page?
-    @selected > (@page * @dir.files_per_page) + @dir.files_per_page - 1
-  end
-
-  def change_directory(file_path)
-    @page = 0
-    @selected = 0
-    @current_path = file_path
-    @files = order_files(@model.files_in_dir(@current_path, @options))
-  end
-
-  # Order files such that '.' and '..' come before
-  # all the other files.
-  def order_files(files)
-    # Put "." and ".." at the start
-    groups = files.group_by do |f|
-      if f.first == './' || f.first == '../'
-        :dots
-      else
-        :files
-      end
-    end
-
-    # Sort so that "." comes before ".."
-    (groups[:dots] || []).sort.reverse + (groups[:files] || [])
-  end
-
-  def file_path(file_name)
-    return @current_path if file_name == '.'
-
-    File.join(@current_path, file_name)
+    @model.selected > (@model.page * @view.files_per_page) + @view.files_per_page - 1
   end
 
   def file_path_of_selected
-    file_path(@files[@selected].first)
+    @model.file_path(@model.files[@model.selected].first)
   end
 end

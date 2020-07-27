@@ -31,6 +31,9 @@ Naming/MethodParameterName:
 Metrics/MethodLength:
   Max: 15
 
+Layout/LineLength:
+  Max: 100
+
 Metrics/BlockLength:
   Exclude:
     - 'spec/*'

@@ -1,14 +1,30 @@
 # Functions related to retrieving and formatting
 # information related to directories and their contents.
 class FileBrowserModel
-  def files_in_dir(dir_path, options = {})
-    date_format = options.fetch(:date_format, '%d/%m/%Y')
-    time_format = options.fetch(:time_format, '%H:%M')
+  attr_accessor :selected, :page, :current_path, :files
 
-    Dir.entries(dir_path).map do |f|
-      file_path = File.join(dir_path, f)
+  def initialize(starting_path, options = {})
+    @options = options
+    @current_path = starting_path
+    @page = 0
+    @selected = 0
+    @files = order_files(files_in_dir)
+  end
 
-      name = add_indicator(f, dir_path)
+  def file_path(file_name)
+    return @current_path if file_name == '.'
+
+    File.join(@current_path, file_name)
+  end
+
+  def files_in_dir
+    date_format = @options.fetch(:date_format, '%d/%m/%Y')
+    time_format = @options.fetch(:time_format, '%H:%M')
+
+    Dir.entries(@current_path).map do |f|
+      file_path = File.join(@current_path, f)
+
+      name = add_indicator(f)
 
       size_bytes = File.size(file_path)
 
@@ -20,10 +36,26 @@ class FileBrowserModel
     end
   end
 
+  # Order files such that '.' and '..' come before
+  # all the other files.
+  def order_files(files)
+    # Put "." and ".." at the start
+    groups = files.group_by do |f|
+      if f.first == './' || f.first == '../'
+        :dots
+      else
+        :files
+      end
+    end
+
+    # Sort so that "." comes before ".."
+    (groups[:dots] || []).sort.reverse + (groups[:files] || [])
+  end
+
   private
 
-  def add_indicator(file_name, dir_path)
-    file_path = File.join(dir_path, file_name)
+  def add_indicator(file_name)
+    file_path = File.join(@current_path, file_name)
     return "#{file_name}/" if File.directory?(file_path)
 
     file_name
