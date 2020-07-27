@@ -1,10 +1,11 @@
-require_relative '../../lib/terminal-file-picker/dir_info'
+require_relative '../../lib/terminal-file-picker/file_browser_model'
 
 # rubocop:disable Metrics/BlockLength
-describe DirInfo do
+describe FileBrowserModel do
   describe 'files_in_dir' do
     let(:dir_path) { '' }
     let(:files) { ['.', '..', 'file1.csv', 'dir1', 'file2.txt'] }
+    subject { FileBrowserModel.new }
 
     before(:each) do
       allow(Dir).to receive(:entries).with(dir_path).and_return(files)
@@ -34,7 +35,7 @@ describe DirInfo do
         ['file2.txt', 864_344, '20/04/2018', '05:25']
       ]
 
-      expect(DirInfo.files_in_dir(dir_path)).to eq(expected)
+      expect(subject.files_in_dir(dir_path)).to eq(expected)
     end
 
     context 'when a custom date and time format is given' do
@@ -54,7 +55,7 @@ describe DirInfo do
           ['file2.txt', 864_344, '20-04-2018', '05.25']
         ]
 
-        expect(DirInfo.files_in_dir(dir_path, options)).to eq(expected)
+        expect(subject.files_in_dir(dir_path, options)).to eq(expected)
       end
     end
   end

@@ -2,7 +2,7 @@ require 'tty-cursor'
 require 'tty-reader'
 require_relative 'file_browser_view'
 require_relative 'helper'
-require_relative 'dir_info'
+require_relative 'file_browser_model'
 
 # Responsible for keeping the state of the interactive file picker.
 # Also responds to user input to modify the state and redraw
@@ -17,6 +17,7 @@ class FilePicker
     @page = 0
     @cursor = TTY::Cursor
     @options = options
+    @model = FileBrowserModel.new
 
     change_directory(dir_path)
   end
@@ -94,7 +95,7 @@ class FilePicker
     @page = 0
     @selected = 0
     @current_path = file_path
-    @files = order_files(DirInfo.files_in_dir(@current_path, @options))
+    @files = order_files(@model.files_in_dir(@current_path, @options))
   end
 
   # Order files such that '.' and '..' come before

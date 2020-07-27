@@ -12,7 +12,8 @@ describe FilePicker do
 
   before do
     subject.instance_variable_set(:@files, files)
-    allow(DirInfo).to receive(:files_in_dir).and_return(files)
+    model = subject.instance_variable_get(:@model)
+    allow(model).to receive(:files_in_dir).and_return(files)
   end
 
   describe '#pick_file' do
