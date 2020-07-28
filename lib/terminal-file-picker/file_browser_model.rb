@@ -12,7 +12,7 @@ class FileBrowserModel
   end
 
   def file_path(file_name)
-    return @current_path if file_name == '.'
+    return @current_path if file_name == '.' || file_name == './'
 
     File.join(@current_path, file_name)
   end
