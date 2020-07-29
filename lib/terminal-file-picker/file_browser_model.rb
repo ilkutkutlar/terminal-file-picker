@@ -11,12 +11,6 @@ class FileBrowserModel
     @files = order_files(files_in_dir)
   end
 
-  def file_path(file_name)
-    return @current_path if file_name == '.' || file_name == './'
-
-    File.join(@current_path, file_name)
-  end
-
   def files_in_dir
     date_format = @options.fetch(:date_format, '%d/%m/%Y')
     time_format = @options.fetch(:time_format, '%H:%M')
@@ -52,11 +46,14 @@ class FileBrowserModel
     (groups[:dots] || []).sort.reverse + (groups[:files] || [])
   end
 
+  def path_rel_to_start(file_name)
+    File.join(@current_path, file_name)
+  end
+
   private
 
   def add_indicator(file_name)
-    file_path = File.join(@current_path, file_name)
-    return "#{file_name}/" if File.directory?(file_path)
+    return "#{file_name}/" if File.directory?(path_rel_to_start(file_name))
 
     file_name
   end

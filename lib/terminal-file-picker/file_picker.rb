@@ -100,6 +100,6 @@ class FilePicker
   end
 
   def file_path_of_selected
-    @model.file_path(@model.files[@model.selected].first)
+    @model.path_rel_to_start(@model.files[@model.selected].first)
   end
 end

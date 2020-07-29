@@ -38,15 +38,23 @@ describe FileBrowserModel do
     end
   end
 
+  def mock_dirs
+    dirs = [starting_path,
+            "#{starting_path}/.",
+            "#{starting_path}/..",
+            "#{starting_path}/dir1"]
+
+    allow(File).to receive(:directory?).and_call_original
+    dirs.each do |dir|
+      allow(File).to receive(:directory?).with(dir).and_return(true)
+    end
+  end
+
   before(:each) do
     allow(Dir).to receive(:entries).with(starting_path).and_return(files)
     mock_file_sizes
     mock_file_modified_times
-
-    allow(File).to receive(:directory?).and_call_original
-    allow(File).to receive(:directory?).with("#{starting_path}/.").and_return(true)
-    allow(File).to receive(:directory?).with("#{starting_path}/..").and_return(true)
-    allow(File).to receive(:directory?).with("#{starting_path}/dir1").and_return(true)
+    mock_dirs
   end
 
   describe '#files_in_dir' do
@@ -82,20 +90,11 @@ describe FileBrowserModel do
     end
   end
 
-  describe '#file_path' do
-    context 'file name is current directory ("." or "./")' do
-      it 'returns the current path relative to starting path' do
-        allow(subject).to receive(:current_path).and_return('test_dir')
-        expect(subject.file_path('./')).to eq('test_dir')
-        expect(subject.file_path('.')).to eq('test_dir')
-      end
-    end
-
-    context 'file name is anything else except current directory' do
-      it 'returns the path to given file relative to starting path' do
-        allow(subject).to receive(:current_path).and_return('test_dir')
-        expect(subject.file_path('test_file')).to eq('test_dir/test_file')
-      end
+  describe '#path_rel_to_start' do
+    it 'returns the path to given file relative to starting path' do
+      allow(subject).to receive(:current_path).and_return('test_dir')
+      expect(subject.path_rel_to_start('.')).to eq('test_dir/.')
+      expect(subject.path_rel_to_start('test_file')).to eq('test_dir/test_file')
     end
   end
 
