@@ -25,15 +25,15 @@ gem 'terminal-file-picker'
 # Simple Usage
 
 ```rb
-# Only required argument is the "root path". The user starts
-# navigating from the root path and the returned path of
-# the chosen file is relative to this root path.
+# Only required argument is the "root path". The user will
+# start navigating from the root path once file picker is invoked.
+# Root path can be either absolute or relative.
 picker = FilePicker.new('.')
 
-# This brings up the interactive file picker. Once the user
-# has picked a file, the picker is cleared from screen and
-# the chosen file path returned.
 
+# `pick_file` brings up the interactive file picker. Once the user
+# has picked a file, the picker is cleared from screen and
+# the chosen file path (as an absolute path) is returned.
 # If user picks a directory, instead of returning its path,
 # the files inside the chosen directory is shown instead.
 puts(picker.pick_file)

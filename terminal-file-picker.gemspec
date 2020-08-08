@@ -1,6 +1,6 @@
 Gem::Specification.new do |spec|
   spec.name = 'terminal-file-picker'
-  spec.version = '0.0.2'
+  spec.version = '0.0.3'
   spec.authors = ['Ilkut Kutlar']
   spec.email = ['ilkutkutlar@gmail.com']
   spec.summary = 'Interactive terminal file picker'
@@ -12,6 +12,7 @@ Gem::Specification.new do |spec|
     'lib/terminal-file-picker.rb',
     'lib/terminal-file-picker/file_picker.rb',
     'lib/terminal-file-picker/file_browser_view.rb',
+    'lib/terminal-file-picker/file_browser_model.rb',
     'lib/terminal-file-picker/table.rb',
     'lib/terminal-file-picker/helper.rb'
   ]
