@@ -1,3 +1,5 @@
+require 'pry'
+
 # Functions related to retrieving and formatting
 # information related to directories and their contents.
 class FileBrowserModel
@@ -44,6 +46,14 @@ class FileBrowserModel
 
     # Sort so that "." comes before ".."
     (groups[:dots] || []).sort.reverse + (groups[:files] || [])
+  end
+
+  # Absolute path of the currently selected file
+  def selected_absolute_path
+    selected_file_name = @files[@selected].first
+    # This may not be the absolute path (e.g. file_name may be '.')
+    selected_full_path = File.join(@current_path, selected_file_name)
+    File.absolute_path(selected_full_path)
   end
 
   def path_rel_to_start(file_name)

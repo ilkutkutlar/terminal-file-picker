@@ -1,3 +1,4 @@
+require 'pry'
 require 'tty-cursor'
 require 'tty-reader'
 require_relative 'file_browser_view'
@@ -16,7 +17,8 @@ class FilePicker
     @cursor = TTY::Cursor
     @user_have_picked = false
 
-    change_directory(start_dir_path)
+    absolute_start_path = File.absolute_path(start_dir_path)
+    change_directory(absolute_start_path)
   end
 
   def pick_file
@@ -28,7 +30,7 @@ class FilePicker
     end
 
     print(@cursor.clear_screen_down)
-    file_path_of_selected
+    @model.selected_absolute_path
   end
 
   def keydown(_event)
@@ -52,8 +54,10 @@ class FilePicker
   def keypress(event)
     case event.value
     when "\r"
-      if File.directory?(file_path_of_selected)
-        change_directory(file_path_of_selected)
+      selected = @model.selected_absolute_path
+
+      if File.directory?(selected)
+        change_directory(selected)
         print(@cursor.clear_screen_down)
         # Cache keeps a rendering of current directory.
         # Going to a new directory, so needs to refresh
@@ -67,8 +71,8 @@ class FilePicker
 
   private
 
-  def change_directory(file_path)
-    @model.current_path = file_path
+  def change_directory(absolute_file_path)
+    @model.current_path = absolute_file_path
     @model.page = 0
     @model.selected = 0
     @model.files = @model.order_files(@model.files_in_dir)
@@ -97,9 +101,5 @@ class FilePicker
 
   def selected_below_page?
     @model.selected > (@model.page * @view.files_per_page) + @view.files_per_page - 1
-  end
-
-  def file_path_of_selected
-    @model.path_rel_to_start(@model.files[@model.selected].first)
   end
 end

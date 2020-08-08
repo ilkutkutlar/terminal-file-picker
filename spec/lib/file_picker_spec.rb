@@ -1,17 +1,57 @@
 require_relative '../../lib/terminal-file-picker/file_picker'
+require 'pry'
 
 # rubocop:disable Metrics/BlockLength
 describe FilePicker do
+  let(:starting_path) { '/home/test_user' }
   let(:files) do
     [
       ['file_1', '4096', '17/05/2020', '19:39'],
       ['file_2', '2048', '14/05/2020', '19:00']
     ]
   end
-  subject { FilePicker.new('.') }
+  let(:test_time1) { Time.new(2020, 5, 17, 19, 39) }
+  let(:test_time2) { Time.new(2020, 5, 14, 19, 00) }
+
+  subject { FilePicker.new(starting_path) }
   let(:model) { subject.instance_variable_get(:@model) }
 
+  def mock_file_sizes
+    sizes = {
+      "#{starting_path}/file_1" => 4096,
+      "#{starting_path}/file_2" => 2048
+    }
+
+    sizes.each do |file, size|
+      allow(File).to receive(:size).with(file).and_return(size)
+    end
+  end
+
+  def mock_file_modified_times
+    mtimes = {
+      "#{starting_path}/file_1" => test_time1,
+      "#{starting_path}/file_2" => test_time2
+    }
+
+    mtimes.each do |file, mtime|
+      allow(File).to receive(:mtime).with(file).and_return(mtime)
+    end
+  end
+
+  def mock_dirs
+    allow(File).to receive(:directory?).and_call_original
+
+    dirs.each do |dir|
+      allow(File).to receive(:directory?).with(dir).and_return(true)
+    end
+  end
+
   before do
+    mock_file_sizes
+    mock_file_modified_times
+    file_names_only = files.map(&:first)
+    allow(Dir).to receive(:entries).with(starting_path).and_return(file_names_only)
+
     model.instance_variable_set(:@files, files)
     allow(model).to receive(:files_in_dir).and_return(files)
   end
@@ -23,7 +63,7 @@ describe FilePicker do
   describe '#keydown' do
     it 'selects item one below the current one and redraws picker' do
       model.instance_variable_set(:@selected, 0)
-      expected = "\e[1GPage: 1/1 | Directory: .\n\n" \
+      expected = "\e[1GPage: 1/1 | Directory: /home/test_user\n\n" \
                  "  Name      Size (B)    Date modified    Time modified  \n" \
                  "--------------------------------------------------------\n" \
                  "  file_1    4096        17/05/2020       19:39          \n" \
@@ -44,7 +84,7 @@ describe FilePicker do
 
         model.instance_variable_set(:@selected, 0)
 
-        expected = "\e[J\e[1GPage: 2/2 | Directory: .\n\n" \
+        expected = "\e[J\e[1GPage: 2/2 | Directory: /home/test_user\n\n" \
                    "  Name      Size (B)    Date modified    Time modified  \n" \
                    "--------------------------------------------------------\n" \
                    "\e[7m" \
@@ -53,7 +93,6 @@ describe FilePicker do
                    "\e[4A\e[1G"
 
         expect { subject.keydown(nil) }.to output(expected).to_stdout
-
         expect(model.instance_variable_get(:@page)).to eq(1)
         expect(model.instance_variable_get(:@selected)).to eq(1)
       end
@@ -63,7 +102,7 @@ describe FilePicker do
   describe '#keyup' do
     it 'selects item one above the current one and redraws picker' do
       model.instance_variable_set(:@selected, 1)
-      expected = "\e[1GPage: 1/1 | Directory: .\n\n" \
+      expected = "\e[1GPage: 1/1 | Directory: /home/test_user\n\n" \
                  "  Name      Size (B)    Date modified    Time modified  \n" \
                  "--------------------------------------------------------\n" \
                  "\e[7m" \
@@ -85,7 +124,7 @@ describe FilePicker do
         model.instance_variable_set(:@page, 1)
         model.instance_variable_set(:@selected, 1)
 
-        expected = "\e[J\e[1GPage: 1/2 | Directory: .\n\n" \
+        expected = "\e[J\e[1GPage: 1/2 | Directory: /home/test_user\n\n" \
                    "  Name      Size (B)    Date modified    Time modified  \n" \
                    "--------------------------------------------------------\n" \
                    "\e[7m" \
@@ -107,17 +146,17 @@ describe FilePicker do
         it 'changes current directory to selected and redraws picker' do
           # 0th item is 'file_1'
           model.instance_variable_set(:@selected, 0)
-          model.instance_variable_set(:@current_path, '.')
+          model.instance_variable_set(:@current_path, starting_path)
 
           event = double
           allow(event).to receive(:value).and_return("\r")
 
-          file_path = './file_1'
+          file_path = "#{starting_path}/file_1"
 
           allow(File).to receive(:directory?).and_call_original
           allow(File).to receive(:directory?).with(file_path).and_return(true)
 
-          expected = "\e[J\e[1GPage: 1/1 | Directory: ./file_1\n\n" \
+          expected = "\e[J\e[1GPage: 1/1 | Directory: /home/test_user/file_1\n\n" \
                  "  Name      Size (B)    Date modified    Time modified  \n" \
                  "--------------------------------------------------------\n" \
                  "\e[7m" \
@@ -133,12 +172,12 @@ describe FilePicker do
       context 'selected item is a file' do
         it 'sets flag to indicate user have picked a file' do
           subject.instance_variable_set(:@selected, 0)
-          subject.instance_variable_set(:@current_path, '.')
+          subject.instance_variable_set(:@current_path, starting_path)
 
           event = double
           allow(event).to receive(:value).and_return("\r")
 
-          file_path = './file_1'
+          file_path = "#{starting_path}/file_1"
 
           allow(File).to receive(:directory?).and_call_original
           allow(File).to receive(:directory?).with(file_path).and_return(false)
