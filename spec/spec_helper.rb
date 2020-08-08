@@ -1,3 +1,5 @@
+require_relative './support/spec_helpers'
+
 RSpec.configure do |config|
   config.expect_with :rspec do |expectations|
     expectations.include_chain_clauses_in_custom_matcher_descriptions = true
@@ -10,4 +12,6 @@ RSpec.configure do |config|
   config.warnings = true
   config.order = :random
   config.shared_context_metadata_behavior = :apply_to_host_groups
+
+  config.include SpecHelpers
 end

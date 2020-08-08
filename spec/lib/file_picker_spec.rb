@@ -1,5 +1,6 @@
 require_relative '../../lib/terminal-file-picker/file_picker'
 require 'pry'
+require 'time'
 
 # rubocop:disable Metrics/BlockLength
 describe FilePicker do
@@ -10,47 +11,14 @@ describe FilePicker do
       ['file_2', '2048', '14/05/2020', '19:00']
     ]
   end
-  let(:test_time1) { Time.new(2020, 5, 17, 19, 39) }
-  let(:test_time2) { Time.new(2020, 5, 14, 19, 00) }
 
   subject { FilePicker.new(starting_path) }
   let(:model) { subject.instance_variable_get(:@model) }
 
-  def mock_file_sizes
-    sizes = {
-      "#{starting_path}/file_1" => 4096,
-      "#{starting_path}/file_2" => 2048
-    }
-
-    sizes.each do |file, size|
-      allow(File).to receive(:size).with(file).and_return(size)
-    end
-  end
-
-  def mock_file_modified_times
-    mtimes = {
-      "#{starting_path}/file_1" => test_time1,
-      "#{starting_path}/file_2" => test_time2
-    }
-
-    mtimes.each do |file, mtime|
-      allow(File).to receive(:mtime).with(file).and_return(mtime)
-    end
-  end
-
-  def mock_dirs
-    allow(File).to receive(:directory?).and_call_original
-
-    dirs.each do |dir|
-      allow(File).to receive(:directory?).with(dir).and_return(true)
-    end
-  end
-
   before do
-    mock_file_sizes
-    mock_file_modified_times
-    file_names_only = files.map(&:first)
-    allow(Dir).to receive(:entries).with(starting_path).and_return(file_names_only)
+    mock_file_sizes(files, starting_path)
+    mock_file_modified_times(files, starting_path)
+    mock_dir_entries(starting_path, files)
 
     model.instance_variable_set(:@files, files)
     allow(model).to receive(:files_in_dir).and_return(files)

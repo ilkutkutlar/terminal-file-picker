@@ -4,38 +4,15 @@ require_relative '../../lib/terminal-file-picker/file_browser_model'
 describe FileBrowserModel do
   subject { FileBrowserModel.new(starting_path) }
 
-  let(:starting_path) { 'test_dir' }
-  let(:files) { ['.', '..', 'file1.csv', 'dir1', 'file2.txt'] }
-  let(:test_time1) { Time.new(2020, 7, 26, 14, 20) }
-  let(:test_time2) { Time.new(2019, 6, 24, 10, 50) }
-  let(:test_time3) { Time.new(2018, 4, 20, 5, 25) }
-
-  def mock_file_sizes
-    sizes = {
-      "#{starting_path}/." => 4_096,
-      "#{starting_path}/.." => 4_096,
-      "#{starting_path}/file1.csv" => 150,
-      "#{starting_path}/dir1" => 15_570,
-      "#{starting_path}/file2.txt" => 864_344
-    }
-
-    sizes.each do |file, size|
-      allow(File).to receive(:size).with(file).and_return(size)
-    end
-  end
-
-  def mock_file_modified_times
-    mtimes = {
-      "#{starting_path}/." => test_time1,
-      "#{starting_path}/.." => test_time2,
-      "#{starting_path}/file1.csv" => test_time1,
-      "#{starting_path}/dir1" => test_time2,
-      "#{starting_path}/file2.txt" => test_time3
-    }
-
-    mtimes.each do |file, mtime|
-      allow(File).to receive(:mtime).with(file).and_return(mtime)
-    end
+  let(:starting_path) { '/test_dir' }
+  let(:files) do
+    [
+      ['./', 4_096, '26/07/2020', '14:20'],
+      ['../', 4_096, '24/06/2019', '10:50'],
+      ['file1.csv', 150, '26/07/2020', '14:20'],
+      ['dir1/', 15_570, '24/06/2019', '10:50'],
+      ['file2.txt', 864_344, '20/04/2018', '05:25']
+    ]
   end
 
   def mock_dirs
@@ -51,22 +28,15 @@ describe FileBrowserModel do
   end
 
   before(:each) do
-    allow(Dir).to receive(:entries).with(starting_path).and_return(files)
-    mock_file_sizes
-    mock_file_modified_times
+    mock_dir_entries(starting_path, files)
+    mock_file_sizes(files, starting_path)
+    mock_file_modified_times(files, starting_path)
     mock_dirs
   end
 
   describe '#files_in_dir' do
     it 'returns a set of details for all files in directory' do
-      expected = [
-        ['./', 4_096, '26/07/2020', '14:20'],
-        ['../', 4_096, '24/06/2019', '10:50'],
-        ['file1.csv', 150, '26/07/2020', '14:20'],
-        ['dir1/', 15_570, '24/06/2019', '10:50'],
-        ['file2.txt', 864_344, '20/04/2018', '05:25']
-      ]
-
+      expected = files
       expect(subject.files_in_dir).to eq(expected)
     end
 
@@ -92,9 +62,9 @@ describe FileBrowserModel do
 
   describe '#path_rel_to_start' do
     it 'returns the path to given file relative to starting path' do
-      allow(subject).to receive(:current_path).and_return('test_dir')
-      expect(subject.path_rel_to_start('.')).to eq('test_dir/.')
-      expect(subject.path_rel_to_start('test_file')).to eq('test_dir/test_file')
+      allow(subject).to receive(:current_path).and_return('/test_dir')
+      expect(subject.path_rel_to_start('.')).to eq('/test_dir/.')
+      expect(subject.path_rel_to_start('test_file')).to eq('/test_dir/test_file')
     end
   end
 

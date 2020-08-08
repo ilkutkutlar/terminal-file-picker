@@ -3,8 +3,10 @@ require_relative '../../lib/terminal-file-picker/file_browser_view'
 # rubocop:disable Metrics/BlockLength
 describe FileBrowserView do
   let(:files) do
-    [['File 1', '4096', '17/05/2020', '19:39'],
-     ['File 2', '2048', '14/05/2020', '19:00']]
+    [
+      ['File 1', '4096', '17/05/2020', '19:39'],
+      ['File 2', '2048', '14/05/2020', '19:00']
+    ]
   end
 
   describe '#render' do
@@ -13,8 +15,7 @@ describe FileBrowserView do
       expected = "Page: 1/1 | Directory: test_directory\n\n" \
                  "  Name      Size (B)    Date modified    Time modified  \n" \
                  "--------------------------------------------------------\n" \
-                 "\e[7m  File 1    4096        " \
-                 "17/05/2020       19:39          \e[0m\n" \
+                 "\e[7m  File 1    4096        17/05/2020       19:39          \e[0m\n" \
                  '  File 2    2048        14/05/2020       19:00          '
 
       expect(dir.render('test_directory', files, 0, 0)).to eq(expected)
@@ -27,8 +28,7 @@ describe FileBrowserView do
       expected = "Page: 1/1 | Directory: test_directory\n\n" \
                  "  the name    the size    the date      the time  \n" \
                  "--------------------------------------------------\n" \
-                 "\e[7m  File 1      4096        " \
-                 "17/05/2020    19:39     \e[0m\n" \
+                 "\e[7m  File 1      4096        17/05/2020    19:39     \e[0m\n" \
                  '  File 2      2048        14/05/2020    19:00     '
 
       expect(dir.render('test_directory', files, 0, 0)).to eq(expected)
@@ -40,8 +40,7 @@ describe FileBrowserView do
       expected = "Page: 1/1 | the directory: test_directory\n\n" \
                  "  Name      Size (B)    Date modified    Time modified  \n" \
                  "--------------------------------------------------------\n" \
-                 "\e[7m  File 1    4096        " \
-                 "17/05/2020       19:39          \e[0m\n" \
+                 "\e[7m  File 1    4096        17/05/2020       19:39          \e[0m\n" \
                  '  File 2    2048        14/05/2020       19:00          '
 
       expect(dir.render('test_directory', files, 0, 0)).to eq(expected)
@@ -53,8 +52,7 @@ describe FileBrowserView do
       expected = "Page: 1/1 | Directory: test_directory\n\n" \
                  " Name    Size (B)  Date modified  Time modified \n" \
                  "------------------------------------------------\n" \
-                 "\e[7m File 1  4096      " \
-                 "17/05/2020     19:39         \e[0m\n" \
+                 "\e[7m File 1  4096      17/05/2020     19:39         \e[0m\n" \
                  ' File 2  2048      14/05/2020     19:00         '
 
       expect(dir.render('test_directory', files, 0, 0)).to eq(expected)
@@ -66,8 +64,7 @@ describe FileBrowserView do
       expected = "the page: 1/1 | Directory: test_directory\n\n" \
                  "  Name      Size (B)    Date modified    Time modified  \n" \
                  "--------------------------------------------------------\n" \
-                 "\e[7m  File 1    4096        " \
-                 "17/05/2020       19:39          \e[0m\n" \
+                 "\e[7m  File 1    4096        17/05/2020       19:39          \e[0m\n" \
                  '  File 2    2048        14/05/2020       19:00          '
 
       expect(dir.render('test_directory', files, 0, 0)).to eq(expected)
@@ -78,8 +75,7 @@ describe FileBrowserView do
 
       expected = "  Name      Size (B)    Date modified    Time modified  \n" \
                  "--------------------------------------------------------\n" \
-                 "\e[7m  File 1    4096        " \
-                 "17/05/2020       19:39          \e[0m\n" \
+                 "\e[7m  File 1    4096        17/05/2020       19:39          \e[0m\n" \
                  '  File 2    2048        14/05/2020       19:00          '
 
       expect(dir.render('test_directory', files, 0, 0)).to eq(expected)
