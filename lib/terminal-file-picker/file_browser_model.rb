@@ -1,5 +1,3 @@
-require 'pry'
-
 # Functions related to retrieving and formatting
 # information related to directories and their contents.
 class FileBrowserModel

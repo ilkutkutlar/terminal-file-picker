@@ -1,21 +1,14 @@
 Gem::Specification.new do |spec|
   spec.name = 'terminal-file-picker'
-  spec.version = '0.0.3'
+  spec.version = '0.0.4'
   spec.authors = ['Ilkut Kutlar']
   spec.email = ['ilkutkutlar@gmail.com']
   spec.summary = 'Interactive terminal file picker'
   spec.description = 'This gem shows an interactive terminal file picker to user, allowing them to browse their files with arrow keys. The picked file path is then returned to the calling program.'
   spec.homepage = 'https://github.com/ilkutkutlar/terminal-file-picker'
   spec.license = 'MIT'
-  spec.files = [
-    'README.md',
-    'lib/terminal-file-picker.rb',
-    'lib/terminal-file-picker/file_picker.rb',
-    'lib/terminal-file-picker/file_browser_view.rb',
-    'lib/terminal-file-picker/file_browser_model.rb',
-    'lib/terminal-file-picker/table.rb',
-    'lib/terminal-file-picker/helper.rb'
-  ]
+  spec.files = Dir['lib/**/*']
+  spec.extra_rdoc_files = ['README.md', 'LICENSE']
   spec.require_paths = ['lib']
 
   spec.required_ruby_version = '>= 2.0.0'

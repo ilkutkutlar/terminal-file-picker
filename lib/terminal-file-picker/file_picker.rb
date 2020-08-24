@@ -1,4 +1,3 @@
-require 'pry'
 require 'tty-cursor'
 require 'tty-reader'
 require_relative 'file_browser_view'

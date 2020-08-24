@@ -1,5 +1,4 @@
 require_relative '../../lib/terminal-file-picker/file_picker'
-require 'pry'
 require 'time'
 
 # rubocop:disable Metrics/BlockLength
