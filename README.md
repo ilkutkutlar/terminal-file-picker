@@ -25,6 +25,8 @@ gem 'terminal-file-picker'
 # Simple Usage
 
 ```rb
+require 'terminal-file-picker'
+
 # Only required argument is the "root path". The user will
 # start navigating from the root path once file picker is invoked.
 # Root path can be either absolute or relative.
