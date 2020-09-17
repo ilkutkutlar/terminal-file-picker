@@ -41,3 +41,7 @@ Metrics/BlockLength:
 Style/BlockComments:
   Exclude:
     - 'spec/*'
+
+Naming/FileName:
+  Exclude:
+    - 'lib/terminal-file-picker.rb'
