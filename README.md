@@ -10,7 +10,7 @@ The gem is useful when your program needs to accept a file path as input and you
 
 The gem does not rely on the Curses library and instead uses the [TTY toolkit](https://github.com/piotrmurach/tty), which has cross platform support and support for many types of terminals/terminal emulators. Therefore this gem should also have the same level of support.
 
-# Installation
+## Installation
 
 ```rb
 gem install 'terminal-file-picker'
@@ -22,7 +22,7 @@ or add it to your project's `Gemfile`:
 gem 'terminal-file-picker'
 ```
 
-# Simple Usage
+## Simple Usage
 
 ```rb
 require 'terminal-file-picker'
@@ -41,7 +41,7 @@ picker = FilePicker.new('.')
 puts(picker.pick_file)
 ```
 
-# Options
+## Options
 
 There are some options to customise the look and feel of the file picker (all options do have default values, so all are optional)
 
@@ -91,3 +91,9 @@ You can change the date and time format of date modified and time modified colum
 ```rb
 FilePicker.new('.',  date_format: '%d-%m-%Y', time_format: '%H.%m')
 ```
+
+## Development
+
+- Officially, this gem supports Ruby versions >= 2.0.0 and such a Ruby version should be used during development as well.
+- Tests are written with [Rspec](https://github.com/rspec/rspec), version ~3.9. Run the tests on terminal with `rspec` in the project directory (need to install rspec first).
+- [Rubocop](https://github.com/rubocop-hq/rubocop) version ~0.8.2 is used to check for use of best practices and standard styling. Run Rubocop on the terminal with `rubocop` in the project directory (need to install Rubocop first). Currently, there are a couple of failing Rubocop checks which will be fixed soon.
