@@ -1,6 +1,6 @@
 Gem::Specification.new do |spec|
   spec.name = 'terminal-file-picker'
-  spec.version = '0.0.4'
+  spec.version = '0.0.5'
   spec.authors = ['Ilkut Kutlar']
   spec.email = ['ilkutkutlar@gmail.com']
   spec.summary = 'Interactive terminal file picker'
