@@ -33,6 +33,8 @@ class FileBrowserModel
   # Order files such that '.' and '..' come before
   # all the other files.
   def order_files(files)
+    # Pre-sort files.
+    files.sort!{|a,b| a[0]<=>b[0]}
     # Put "." and ".." at the start
     groups = files.group_by do |f|
       if f.first == './' || f.first == '../'
